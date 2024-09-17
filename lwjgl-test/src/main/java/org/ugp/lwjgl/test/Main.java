@@ -75,17 +75,31 @@ public class Main {
 		// the window or has pressed the ESCAPE key.
 		while (!glfwWindowShouldClose(window)) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			
-			glfwSwapBuffers(window); // swap the color buffers
-
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			glfwPollEvents();
 		}
 	}
 
 	public static void main(String[] args) {
-		new Main().run();
+    	GLFWErrorCallback.createPrint(System.err).set();
+
+		// Initialize  Most GLFW functions will not work before doing this.
+		if (!glfwInit())
+			throw new IllegalStateException("Unable to initialize GLFW");
+
+		
+		Window w = new Window("hi", 400, 400) {
+			@Override
+			public void update() 
+			{
+				glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			}
+		};
+		
+        GL.createCapabilities();
+		while (w.pollEvents());
+		
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
 	}
 
 }
